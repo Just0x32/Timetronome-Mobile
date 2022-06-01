@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetronome.Android", "Timetronome\Timetronome.Android\Timetronome.Android.csproj", "{C7CC557F-51FE-4806-8E62-3E62D96BE09E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Timetronome", "Timetronome\Timetronome\Timetronome.csproj", "{58784F60-4EC9-48DA-A4C4-A0DABEFA82DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7CC557F-51FE-4806-8E62-3E62D96BE09E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7CC557F-51FE-4806-8E62-3E62D96BE09E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7CC557F-51FE-4806-8E62-3E62D96BE09E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C7CC557F-51FE-4806-8E62-3E62D96BE09E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7CC557F-51FE-4806-8E62-3E62D96BE09E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7CC557F-51FE-4806-8E62-3E62D96BE09E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{58784F60-4EC9-48DA-A4C4-A0DABEFA82DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58784F60-4EC9-48DA-A4C4-A0DABEFA82DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58784F60-4EC9-48DA-A4C4-A0DABEFA82DD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{58784F60-4EC9-48DA-A4C4-A0DABEFA82DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58784F60-4EC9-48DA-A4C4-A0DABEFA82DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58784F60-4EC9-48DA-A4C4-A0DABEFA82DD}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C7BC34F9-2912-488F-9FE0-D37823D9AB90}
+	EndGlobalSection
+EndGlobal
