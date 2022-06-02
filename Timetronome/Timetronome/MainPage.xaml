@@ -32,13 +32,17 @@
         </Grid.RowDefinitions>
 
         <StackLayout x:Name="TempoStackLayout" Grid.Row="0" Orientation="Vertical" VerticalOptions="Center">
-            <Label x:Name="TempoLabel" Style="{StaticResource Labels}" Text="Tempo (20...300)"/>
-            <Entry Style="{StaticResource Entries}" WidthRequest="{Binding Source={x:Reference TempoLabel}, Path=Width}" Text="120"/>
+            <Label x:Name="TempoLabel" Style="{StaticResource Labels}"
+                   Text="{Binding Path=TempoText, Mode=OneWay}"/>
+            <Entry Style="{StaticResource Entries}" WidthRequest="{Binding Source={x:Reference TempoLabel}, Path=Width}"
+                   Text="{Binding Path=TempoValue, Mode=OneWay}"/>
         </StackLayout>
 
         <StackLayout Grid.Row="1" Orientation="Vertical" VerticalOptions="Center">
-            <Label x:Name="TimerLabel" Style="{StaticResource Labels}" Text="Timer (1...600 min)"/>
-            <Entry Style="{StaticResource Entries}" WidthRequest="{Binding Source={x:Reference TimerLabel}, Path=Width}" Text="10"/>
+            <Label x:Name="TimerLabel" Style="{StaticResource Labels}"
+                   Text="{Binding Path=TimerText, Mode=OneWay}"/>
+            <Entry Style="{StaticResource Entries}" WidthRequest="{Binding Source={x:Reference TimerLabel}, Path=Width}"
+                   Text="{Binding Path=TimerValue, Mode=OneWay}"/>
         </StackLayout>
         
         <Button Grid.Row="2" Style="{StaticResource Buttons}" HeightRequest="{Binding Source={x:Reference TempoStackLayout}, Path=Height}" Text="Start"/>

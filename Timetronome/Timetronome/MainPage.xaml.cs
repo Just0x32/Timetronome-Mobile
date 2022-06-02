@@ -10,8 +10,11 @@ namespace Timetronome
 {
     public partial class MainPage : ContentPage
     {
+        private ViewModel viewModel = new ViewModel();
+
         public MainPage()
         {
+            BindingContext = viewModel;
             InitializeComponent();
         }
     }
