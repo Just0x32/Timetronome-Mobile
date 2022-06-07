@@ -17,5 +17,13 @@ namespace Timetronome
             BindingContext = viewModel;
             InitializeComponent();
         }
+
+        private void MetronomeStateButton_Clicked(object sender, EventArgs e)
+        {
+            int.TryParse(TempoEntry.Text, out int tempo);
+            int.TryParse(TimerEntry.Text, out int timer);
+
+            viewModel.ToogleMetronomeState(tempo, timer);
+        }
     }
 }
