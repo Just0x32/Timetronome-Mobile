@@ -1,22 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Timetronome.Services;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Timetronome
 {
     public partial class MainPage : ContentPage
     {
-        private ViewModel viewModel = new ViewModel();
+        private ViewModel viewModel;
+        private IAudio audioService;
 
         public MainPage()
         {
+            audioService = DependencyService.Get<IAudio>();
+            viewModel = new ViewModel(audioService);
             BindingContext = viewModel;
             InitializeComponent();
+            DeviceDisplay.KeepScreenOn = true;
         }
+
+        internal void OnSleep() => viewModel.OnSleepingApp();
+
+        internal void OnResume() => viewModel.OnResumingApp();
 
         private void MetronomeStateButton_Clicked(object sender, EventArgs e)
         {

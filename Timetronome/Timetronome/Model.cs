@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+using Timetronome.Services;
 
 namespace Timetronome
 {
     internal class Model : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        private IAudio audioService;
 
-        Timer oneMinuteTimer;
+        Thread clickerThread;
 
         internal readonly int TempoMinValue = 20;
         internal readonly int TempoMaxValue = 300;
@@ -88,57 +88,124 @@ namespace Timetronome
             }
         }
 
-        internal Model()
+        private bool IsSleepingClickerThread { get; set; }
+
+        private bool IsInterruptingClickerThread { get; set; } = false;
+
+        private bool IsSleepingApp { get; set; } = false;
+
+        internal Model(IAudio audioService)
         {
+            this.audioService = audioService;
+            audioService.Initialize("click.wav");
             SettedTempo = TempoDefaultValue;
             SettedTimer = TimerDefaultValue;
+            OnResumingApp();
         }
 
-        internal async void ToogleMetronomeState(int receivedTempo, int receivedTimer)
+        internal void OnResumingApp()
+        {
+            IsSleepingApp = false;
+            clickerThread = new Thread(new ThreadStart(Clicker));
+            clickerThread.Start();
+        }
+
+        internal void OnSleepingApp() => IsSleepingApp = true;
+
+        internal void ToogleMetronomeState(int receivedTempo, int receivedTimer)
         {
             if (!IsRunningMetronome)
             {
                 SettedTempo = receivedTempo;
                 SettedTimer = receivedTimer;
                 EstimateTime = SettedTimer;
-            }
-
-            IsRunningMetronome = !IsRunningMetronome;
-
-            if (IsRunningMetronome)
-            {
-                oneMinuteTimer = new Timer(60000);
-                Timer returnedTimer;
-                
-                while (IsRunningMetronome && EstimateTime > 0)
-                {
-                    returnedTimer = await oneMinuteTimer.GetTimerAfterTheDelay();
-
-                    if (returnedTimer == oneMinuteTimer)
-                        EstimateTime--;
-                    else
-                        break;
-                }
-
-                if (!(EstimateTime > 0))
-                    IsRunningMetronome = false;
+                IsRunningMetronome = true;
+                ClickerThreadInterrupt();
             }
             else
             {
-                oneMinuteTimer = null;
+                IsRunningMetronome = false;
+                ClickerThreadInterrupt();
             }
         }
 
-        private class Timer
+        private void Clicker()
         {
-            internal int Delay { get; private set; }
+            Stopwatch stopwatch = new Stopwatch();
 
-            internal Timer(int delay) => Delay = delay;
-
-            internal async Task<Timer> GetTimerAfterTheDelay()
+            while (!IsSleepingApp)
             {
-                await Task.Delay(Delay);
-                return this;
+                ClickerThreadWaiting();
+                IsInterruptingClickerThread = false;
+                int clickDelay = 60000 / SettedTempo;
+                int clickCounter = 0;
+
+                while (!IsSleepingApp && IsRunningMetronome && EstimateTime > 0)
+                {
+                    stopwatch.Start();
+                    audioService.PlayTrack();
+                    clickCounter++;
+
+                    if (clickCounter >= SettedTempo)
+                    {
+                        EstimateTime--;
+                        clickCounter = 0;
+                    }
+
+                    stopwatch.Stop();
+
+                    if (EstimateTime > 0)
+                    {
+                        int estimateDelay = 0;
+
+                        if (stopwatch.ElapsedMilliseconds < clickDelay)
+                            estimateDelay = clickDelay - (int)stopwatch.ElapsedMilliseconds;
+
+                        ClickerThreadDelay(estimateDelay);
+                        IsInterruptingClickerThread = false;
+                    }
+
+                    stopwatch.Reset();
+                }
+
+                IsRunningMetronome = false;
+            }
+        }
+
+        private void ClickerThreadWaiting()
+        {
+            try
+            {
+                IsSleepingClickerThread = true;
+                Thread.Sleep(Timeout.Infinite);
+            }
+            catch (ThreadInterruptedException) { }
+            finally
+            {
+                IsSleepingClickerThread = false;
+            }
+        }
+
+        private void ClickerThreadDelay(int delay)
+        {
+            try
+            {
+                IsSleepingClickerThread = true;
+                Thread.Sleep(delay);
+            }
+            catch (ThreadInterruptedException) { }
+            finally
+            {
+                IsSleepingClickerThread = false;
+            }
+        }
+
+        private void ClickerThreadInterrupt()
+        {
+            if (IsSleepingClickerThread && !IsInterruptingClickerThread)
+            {
+                IsInterruptingClickerThread = true;
+                clickerThread.Interrupt();
             }
         }
 

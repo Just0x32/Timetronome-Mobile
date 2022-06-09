@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
+using Timetronome.Services;
 
 namespace Timetronome
 {
@@ -10,7 +11,7 @@ namespace Timetronome
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private Model model = new Model();
+        private Model model;
 
         public string TempoText { get => $"Tempo ({model.TempoMinValue}...{model.TempoMaxValue})"; }
         public int SettedTempo { get => model.SettedTempo; private set => OnPropertyChanged(); }
@@ -36,12 +37,17 @@ namespace Timetronome
             private set => OnPropertyChanged();
         }
 
-        internal ViewModel()
+        internal ViewModel(IAudio audioService)
         {
+            model = new Model(audioService);
             model.PropertyChanged += PropertyChangedNotifying;
         }
 
         internal void ToogleMetronomeState(int tempo, int timer) => model.ToogleMetronomeState(tempo, timer);
+
+        internal void OnSleepingApp() => model.OnSleepingApp();
+
+        internal void OnResumingApp() => model.OnResumingApp();
 
         private void PropertyChangedNotifying(object sender, PropertyChangedEventArgs e)
         {

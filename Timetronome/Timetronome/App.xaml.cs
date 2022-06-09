@@ -6,11 +6,12 @@ namespace Timetronome
 {
     public partial class App : Application
     {
+        MainPage mainPage;
+
         public App()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            MainPage = mainPage = new MainPage();
         }
 
         protected override void OnStart()
@@ -19,10 +20,12 @@ namespace Timetronome
 
         protected override void OnSleep()
         {
+            mainPage.OnSleep();
         }
 
         protected override void OnResume()
         {
+            mainPage.OnResume();
         }
     }
 }
